@@ -19,32 +19,56 @@ void AC_Cubic::BeginPlay()
 	TArray<int> K;
 	TArray<int> Check;
 
-	while (1)
+
+
+	for (int i = 0; i < 5; i++)
 	{
-		for (uint8 i = 0; i < 100; i++)
+		K.Add(i);
+		if (i == 3)
 		{
-			K.Add(rand() % 100);
-			Check.Add(K[K.Num()]);
-			for (uint8 j = 0; j < K.Num() - 1; j++)
-			{
-				if (Check[j] == K[i])
-				{
-					K.Empty(i);
-					--i;
-					break;
-				}
-			}
+			K.Empty(i);
+			--i;
 		}
 
-		break;
 	}
 
-	for (uint8 i = 0; i < 100; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Black, FString::FromInt(K[i]));
 	}
 
 
+
+
+
+
+
+	/*
+	K.Add(rand() % 100);
+
+	for (uint8 i = 1; i < 10; i++)
+	{
+		K.Add(rand() % 100);
+		Check.Add(K[K.Num() - 2]);
+		for (uint8 j = 0; j < Check.Num(); j++)
+		{
+			if (Check[j] == K[i])
+			{
+				K.Empty(i);
+				Check.Empty(i - 1);
+				--i;
+				break;
+			}
+		}
+	}
+
+
+	for (uint8 i = 0; i < 10; i++)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Black, FString::FromInt(K[i]));
+	}
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Black, FString::FromInt(K.Num()));
+	*/
 
 }
 
