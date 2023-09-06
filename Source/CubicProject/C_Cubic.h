@@ -18,4 +18,13 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 
+public:
+	int32 Block[6][8];
+
+
+
+
+
+
+
 };

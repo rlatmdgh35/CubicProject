@@ -1,62 +1,60 @@
 #include "C_Cubic.h"
-#include <time.h>
+#include "Kismet/KismetMathLibrary.h"
 
 
+#define Test
 
 AC_Cubic::AC_Cubic()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
-	srand(time(NULL));
 }
 
 void AC_Cubic::BeginPlay()
 {
 	Super::BeginPlay();
+
+#ifdef Test
+	TArray<int32> K;
+	TArray<int32> Check;
+
+
+	K.Add(UKismetMathLibrary::RandomInteger(20));
 	
 
 
-	TArray<int> K;
-	TArray<int> Check;
-
-
-
-	for (int i = 0; i < 5; i++)
-	{
-		K.Add(i);
-		if (i == 3)
-		{
-			K.Empty(i);
-			--i;
-		}
-
-	}
-
-	for (int i = 0; i < 5; i++)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Black, FString::FromInt(K[i]));
-	}
-
-
-
-
-
-
-
-	/*
-	K.Add(rand() % 100);
-
 	for (uint8 i = 1; i < 10; i++)
 	{
-		K.Add(rand() % 100);
+		K.Add(UKismetMathLibrary::RandomInteger(20));
 		Check.Add(K[K.Num() - 2]);
-		for (uint8 j = 0; j < Check.Num(); j++)
+
+		for (uint8 j = 0; j < Check.Num() - 1; j++)
 		{
 			if (Check[j] == K[i])
 			{
-				K.Empty(i);
-				Check.Empty(i - 1);
-				--i;
+				if (!!Check[j])
+				{
+					UE_LOG(LogTemp, Log, TEXT("Check[%d] : %d"), j, Check[j]);
+				}
+				else
+				{
+					UE_LOG(LogTemp, Log, TEXT("Check[%d] is null"), j);
+				}
+
+
+				if (!!K[i])
+				{
+					UE_LOG(LogTemp, Log, TEXT("K[%d] : %d"), i, K[i]);
+				}
+				else
+				{
+					UE_LOG(LogTemp, Log, TEXT("K[%d] is null"), i);
+				}
+
+				/*K.Remove(K[i]);
+				Check.Remove(Check[i - 1]);
+				--i;*/
+
+
 				break;
 			}
 		}
@@ -67,8 +65,13 @@ void AC_Cubic::BeginPlay()
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Black, FString::FromInt(K[i]));
 	}
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Black, FString::FromInt(K.Num()));
-	*/
+#endif
+
+
+
+
+
+
 
 }
 
