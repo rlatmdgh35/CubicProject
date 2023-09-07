@@ -18,12 +18,48 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 
-public:
-	int32 Block[6][8];
+private:
+	UPROPERTY(VisibleDefaultsOnly)
+		class USceneComponent* RootSceneComponent;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UStaticMeshComponent* BlockMesh[27];
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UStaticMeshComponent* Plane[54];
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UMaterial* White;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UMaterial* Red;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UMaterial* Green;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UMaterial* Blue;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UMaterial* Orange;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UMaterial* Yellow;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UMaterial* Black;
 
 
 
 
+
+private:
+	class UMaterial* Color[48];
+
+private:
+	float Serface;
+
+	
 
 
 
