@@ -15,18 +15,18 @@ AC_Cubic::AC_Cubic()
 	C_Helpers::CreateSceneComponent(this, &RootSceneComponent, "RootSceneComponent");
 
 	// Get Color Material Assets
-	C_Helpers::GetAsset(&White, "/Game/MAT_White");
-	C_Helpers::GetAsset(&Red, "/Game/MAT_Red");
-	C_Helpers::GetAsset(&Green, "/Game/MAT_Green");
-	C_Helpers::GetAsset(&Blue, "/Game/MAT_Blue");
-	C_Helpers::GetAsset(&Orange, "/Game/MAT_Orange");
-	C_Helpers::GetAsset(&Yellow, "/Game/MAT_Yellow");
-	C_Helpers::GetAsset(&Black, "/Game/MAT_Black");
+	C_Helpers::GetAsset(&MainColor[0], "/Game/Materials/MAT_White");
+	C_Helpers::GetAsset(&MainColor[1], "/Game/Materials/MAT_Red");
+	C_Helpers::GetAsset(&MainColor[2], "/Game/Materials/MAT_Green");
+	C_Helpers::GetAsset(&MainColor[3], "/Game/Materials/MAT_Blue");
+	C_Helpers::GetAsset(&MainColor[4], "/Game/Materials/MAT_Orange");
+	C_Helpers::GetAsset(&MainColor[5], "/Game/Materials/MAT_Yellow");
+	C_Helpers::GetAsset(&MainColor[6], "/Game/Materials/MAT_Black");
 
 
 	// CreateSceneComponent (Block)
 	UStaticMesh* cubeMesh;
-	C_Helpers::GetAsset(&cubeMesh, "/Game/SM_Cube");
+	C_Helpers::GetAsset(&cubeMesh, "/Game/StaticMeshes/SM_Cube");
 	for (int32 i = 0; i < 27; i++)
 	{
 		FString str = "Block" + FString::FromInt(i);
@@ -39,7 +39,7 @@ AC_Cubic::AC_Cubic()
 
 	// CreateSceneComponent (Plane)
 	UStaticMesh* planeMesh;
-	C_Helpers::GetAsset(&planeMesh, "/Game/SM_Plane");
+	C_Helpers::GetAsset(&planeMesh, "/Game/StaticMeshes/SM_Plane");
 	for (int32 i = 0; i < 54; i++)
 	{
 		FString str = "Plane" + FString::FromInt(i);
@@ -118,84 +118,23 @@ void AC_Cubic::BeginPlay()
 
 
 #ifndef Test
-	TArray<int32> K;
-	TArray<int32> Check;
-
-	K.Add(UKismetMathLibrary::RandomInteger(20));
-	
-
-
-	for (uint8 i = 1; i < 10; i++)
-	{
-		K.Add(UKismetMathLibrary::RandomInteger(20));
-		Check.Add(K[K.Num() - 2]);
-
-		for (uint8 j = 0; j < Check.Num() - 1; j++)
-		{
-			if (Check[j] == K[i])
-			{
-				if (!!Check[j])
-				{
-					UE_LOG(LogTemp, Log, TEXT("Check[%d] : %d"), j, Check[j]);
-				}
-				else
-				{
-					UE_LOG(LogTemp, Log, TEXT("Check[%d] is null"), j);
-				}
-
-
-				if (!!K[i])
-				{
-					UE_LOG(LogTemp, Log, TEXT("K[%d] : %d"), i, K[i]);
-				}
-				else
-				{
-					UE_LOG(LogTemp, Log, TEXT("K[%d] is null"), i);
-				}
-
-				/*K.Remove(K[i]);
-				Check.Remove(Check[i - 1]);
-				--i;*/
-
-
-				break;
-			}
-		}
-	}
-
-
-	for (uint8 i = 0; i < 10; i++)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Black, FString::FromInt(K[i]));
-	}
-#endif
-
-
 	for (int32 i = 0; i < 48; i++)
 	{
-		if (i < 8)
-			Color[i] = White;
-
-		else if (i < 16)
-			Color[i] = Blue;
-
-		else if (i < 24)
-			Color[i] = Red;
-
-		else if (i < 32)
-			Color[i] = Green;
-
-		else if (i < 40)
-			Color[i] = Orange;
-
-		else
-			Color[i] = Yellow;
+		if (i % 6 == 0)			Color[i] = White;
+		else if (i % 6 == 1)	Color[i] = Blue;
+		else if (i % 6 == 2)	Color[i] = Red;
+		else if (i % 6 == 3)	Color[i] = Green;
+		else if (i % 6 == 4)	Color[i] = Orange;
+		else					Color[i] = Yellow;
 	}
 
-	for (int32 i = 0; i < 305; i++)
+	for (int32 i = 0; i < 10; i++)
 	{
 		int32 rand1 = UKismetMathLibrary::RandomIntegerInRange(0, 47);
 		int32 rand2 = UKismetMathLibrary::RandomIntegerInRange(0, 47);
+
+		GLog->Log(FString::FromInt(rand1));
+		GLog->Log(FString::FromInt(rand2));
 
 		UMaterial* swV = nullptr;
 		swV = Color[rand1];
@@ -213,32 +152,45 @@ void AC_Cubic::BeginPlay()
 
 				if (k == 1 && j == 1)
 				{
-					if (i == 0)
-						Plane[index]->SetMaterial(0, White);
-
-					else if (i == 1)
-						Plane[index]->SetMaterial(0, Blue);
-
-					else if (i == 2)
-						Plane[index]->SetMaterial(0, Red);
-
-					else if (i == 3)
-						Plane[index]->SetMaterial(0, Green);
-
-					else if (i == 4)
-						Plane[index]->SetMaterial(0, Orange);
-
-					else
-						Plane[index]->SetMaterial(0, Yellow);
+					if (i == 0)			Plane[index]->SetMaterial(0, White);
+					else if (i == 1)	Plane[index]->SetMaterial(0, Blue);
+					else if (i == 2)	Plane[index]->SetMaterial(0, Red);
+					else if (i == 3)	Plane[index]->SetMaterial(0, Green);
+					else if (i == 4)	Plane[index]->SetMaterial(0, Orange);
+					else				Plane[index]->SetMaterial(0, Yellow);
 				}
-				else if (index < 48)
-					Plane[index]->SetMaterial(0, Color[index]);
+				else if (index < 48)	Plane[index]->SetMaterial(0, Color[index]);
 				else
+				{
 					for (int t = 0; t < 5; t++)
 						Plane[index]->SetMaterial(0, Color[9 * t + 4]);
+				}
 			}
 		}
 	}
+#endif
+
+	for (int32 i = 0; i < 3; i++)
+	{
+		for (int32 j = 0; j < 3; j++)
+		{
+			int32 index = i * 3 + j;
+
+			if (index % 2 == 1 && !(i == 1 && j == 1)) // Odd Number (5 Excluded)
+			{
+				int32 randomValue = UKismetMathLibrary::RandomIntegerInRange(0, 5);
+				Plane[index]->SetMaterial(0, MainColor[randomValue]);
+			}
+			else // Even Number
+			{
+				int32 randomValue = UKismetMathLibrary::RandomIntegerInRange(0, 5);
+				Plane[index]->SetMaterial(0, MainColor[randomValue]);
+
+			}
+		}
+	}
+
+
 
 
 
@@ -254,3 +206,28 @@ void AC_Cubic::Tick(float DeltaTime)
 
 }
 
+int32 AC_Cubic::RandomColor(int32 InValue)
+{
+	while (true)
+	{
+		int32 randomColor = UKismetMathLibrary::RandomIntegerInRange(0, 3);
+
+		if (InValue == 0)
+		{
+			if(randomColor == 0)
+
+			return;
+		}
+		if (InValue == 1)
+		{
+
+		}
+		if (InValue == 2);
+		if (InValue == 3);
+		if (InValue == 4);
+		if (InValue == 5);
+
+
+	}
+
+}

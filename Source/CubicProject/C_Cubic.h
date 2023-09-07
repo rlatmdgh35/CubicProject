@@ -19,6 +19,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
+	int32 RandomColor(int32 InValue);
+
+
+private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class USceneComponent* RootSceneComponent;
 
@@ -29,36 +33,41 @@ private:
 		class UStaticMeshComponent* Plane[54];
 
 	UPROPERTY(VisibleDefaultsOnly)
-		class UMaterial* White;
-
-	UPROPERTY(VisibleDefaultsOnly)
-		class UMaterial* Red;
-
-	UPROPERTY(VisibleDefaultsOnly)
-		class UMaterial* Green;
-
-	UPROPERTY(VisibleDefaultsOnly)
-		class UMaterial* Blue;
-
-	UPROPERTY(VisibleDefaultsOnly)
-		class UMaterial* Orange;
-
-	UPROPERTY(VisibleDefaultsOnly)
-		class UMaterial* Yellow;
-
-	UPROPERTY(VisibleDefaultsOnly)
-		class UMaterial* Black;
-
-
-
-
+		class UMaterial* MainColor[7];
+	/*
+	MainColor[0] -> White
+	MainColor[1] -> Blue
+	MainColor[2] -> Red
+	MainColor[3] -> Green
+	MainColor[4] -> Orange
+	MainColor[5] -> Yellow
+	MainCOlor[6] -> Black
+	*/
 
 private:
 	class UMaterial* Color[48];
 
 private:
-	float Serface;
-
+	bool bCan_WB;
+	bool bCan_WR;
+	bool bCan_WG;
+	bool bCan_WO;
+	bool bCan_YB;
+	bool bCan_YR;
+	bool bCan_YG;
+	bool bCan_YO;
+	bool bCan_BR;
+	bool bCan_RG;
+	bool bCan_GO;
+	bool bCan_OB;
+	bool bCan_WBR;
+	bool bCan_WRG;
+	bool bCan_WGO;
+	bool bCan_WOB;
+	bool bCan_YBR;
+	bool bCan_YRG;
+	bool bCan_YGO;
+	bool bCan_YOB;
 	
 
 
