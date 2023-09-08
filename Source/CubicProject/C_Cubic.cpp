@@ -179,13 +179,32 @@ void AC_Cubic::BeginPlay()
 			if (index % 2 == 1 && !(i == 1 && j == 1)) // Odd Number (5 Excluded)
 			{
 				int32 randomValue = UKismetMathLibrary::RandomIntegerInRange(0, 5);
+				int32 outValue1;
+				int32 outValue2;
 				Plane[index]->SetMaterial(0, MainColor[randomValue]);
+				if (RandomColor(randomValue, outValue1, outValue2))
+				{
+					if (index == 1)
+					{
+						Plane[45]->SetMaterial(0, MainColor[outValue1]);
+						Plane[16]->SetMaterial(0, MainColor[outValue2]);
+						MakeTrue(randomValue, outValue1, outValue2);
+					}
+
+				}
+
+
 			}
 			else // Even Number
 			{
 				int32 randomValue = UKismetMathLibrary::RandomIntegerInRange(0, 5);
+				int32 outValue;
 				Plane[index]->SetMaterial(0, MainColor[randomValue]);
-
+				if (RandomColor(randomValue, outValue))
+				{
+					Plane[index / 2 * 9 + 8]->SetMaterial(0, MainColor[outValue]);
+					MakeTrue(randomValue, outValue);
+				}
 			}
 		}
 	}
@@ -203,31 +222,267 @@ void AC_Cubic::BeginPlay()
 void AC_Cubic::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
-int32 AC_Cubic::RandomColor(int32 InValue)
+bool AC_Cubic::RandomColor(int32 InValue, int32& OutValue)
 {
-	while (true)
+	int32 rand = UKismetMathLibrary::RandomIntegerInRange(0, 3);
+	if (InValue == 0)
+		{
+			if (rand == 0 && bCan_WB == true)			OutValue = 1;
+			else if (rand == 1 && bCan_WR == true)		OutValue = 2;
+			else if (rand == 2 && bCan_WG == true)		OutValue = 3;
+			else if (rand == 3 && bCan_WO == true)		OutValue = 4;
+			else return false;
+		}
+	if (InValue == 1)
+		{
+			if (rand == 0 && bCan_WB == true)			OutValue = 0;
+			else if (rand == 1 && bCan_BR == true)		OutValue = 2;
+			else if (rand == 2 && bCan_OB == true)		OutValue = 4;
+			else if (rand == 3 && bCan_YB == true)		OutValue = 5;
+			else return false;
+		}
+	if (InValue == 2)
+		{
+			if (rand == 0 && bCan_WR == true)			OutValue = 0;
+			else if (rand == 1 && bCan_BR == true)		OutValue = 1;
+			else if (rand == 2 && bCan_RG == true)		OutValue = 3;
+			else if (rand == 3 && bCan_YR == true)		OutValue = 5;
+			else return false;
+		}
+	if (InValue == 3)
+		{
+			if (rand == 0 && bCan_WG == true)			OutValue = 0;
+			else if (rand == 1 && bCan_RG == true)		OutValue = 2;
+			else if (rand == 2 && bCan_GO == true)		OutValue = 4;
+			else if (rand == 3 && bCan_YG == true)		OutValue = 5;
+			else return false;
+		}
+	if (InValue == 4)
+		{
+			if (rand == 0 && bCan_WO == true)			OutValue = 0;
+			else if (rand == 1 && bCan_OB == true)		OutValue = 1;
+			else if (rand == 2 && bCan_GO == true)		OutValue = 3;
+			else if (rand == 3 && bCan_YO == true)		OutValue = 5;
+			else return false;
+		}
+	if (InValue == 5)
+		{
+			if (rand == 0 && bCan_YB == true)			OutValue = 1;
+			else if (rand == 1 && bCan_YR == true)		OutValue = 2;
+			else if (rand == 2 && bCan_YG == true)		OutValue = 3;
+			else if (rand == 3 && bCan_YO == true)		OutValue = 4;
+			else return false;
+		}
+	return true;
+}
+
+bool AC_Cubic::RandomColor(int32 InValue, int32& OutValue1, int32& OutValue2)
+{
+	int32 rand = UKismetMathLibrary::RandomInteger64InRange(0, 3);
+
+	if (InValue == 0)
 	{
-		int32 randomColor = UKismetMathLibrary::RandomIntegerInRange(0, 3);
-
-		if (InValue == 0)
+		if (rand == 0 && bCan_WBR == true)
 		{
-			if(randomColor == 0)
-
-			return;
+			OutValue1 = 1;
+			OutValue2 = 2;
 		}
-		if (InValue == 1)
+		else if (rand == 1 && bCan_WRG == true)
 		{
-
+			OutValue1 = 2;
+			OutValue2 = 3;
 		}
-		if (InValue == 2);
-		if (InValue == 3);
-		if (InValue == 4);
-		if (InValue == 5);
+		else if (rand == 2 && bCan_WGO == true)
+		{
+			OutValue1 = 3;
+			OutValue2 = 4;
+		}
+		else if (rand == 3 && bCan_WOB == true)
+		{
+			OutValue1 = 4;
+			OutValue2 = 1;
+		}
+		else
+			return false;
+	}
+	if (InValue == 1)
+	{
+		if (rand == 0 && bCan_YBR == true)
+		{
+			OutValue1 = 5;
+			OutValue2 = 2;
+		}
+		else if (rand == 1 && bCan_WBR == true)
+		{
+			OutValue1 = 0;
+			OutValue2 = 2;
+		}
+		else if (rand == 2 && bCan_WOB == true)
+		{
+			OutValue1 = 5;
+			OutValue2 = 4;
+		}
+		else if (rand == 3 && bCan_YOB == true)
+		{
+			OutValue1 = 0;
+			OutValue2 = 4;
+		}
+		else
+			return false;
+	}
+	if (InValue == 2)
+	{
+		if (rand == 0 && bCan_YRG == true)
+		{
+			OutValue1 = 5;
+			OutValue2 = 3;
+		}
+		else if (rand == 1 && bCan_WRG == true)
+		{
+			OutValue1 = 0;
+			OutValue2 = 3;
+		}
+		else if (rand == 2 && bCan_WBR == true)
+		{
+			OutValue1 = 0;
+			OutValue2 = 1;
+		}
+		else if (rand == 3 && bCan_YBR == true)
+		{
+			OutValue1 = 5;
+			OutValue2 = 1;
+		}
+		else
+			return false;
+	}
+	if (InValue == 3)
+	{
+		if (rand == 0 && bCan_YGO == true)
+		{
+			OutValue1 = 5;
+			OutValue2 = 4;
+		}
+		else if (rand == 1 && bCan_WGO == true)
+		{
+			OutValue1 = 0;
+			OutValue2 = 4;
+		}
+		else if (rand == 2 && bCan_WRG == true)
+		{
+			OutValue1 = 0;
+			OutValue2 = 2;
+		}
+		else if (rand == 3 && bCan_YRG == true)
+		{
+			OutValue1 = 5;
+			OutValue2 = 2;
+		}
+		else
+			return false;
+	}
+	if (InValue == 4)
+	{
+		if (rand == 0 && bCan_YOB == true)
+		{
+			OutValue1 = 5;
+			OutValue2 = 1;
+		}
+		else if (rand == 1 && bCan_WOB == true)
+		{
+			OutValue1 = 0;
+			OutValue2 = 1;
+		}
+		else if (rand == 2 && bCan_WGO)
+		{
+			OutValue1 = 0;
+			OutValue2 = 3;
+		}
+		else if (rand == 3 && bCan_YGO)
+		{
+			OutValue1 = 5;
+			OutValue2 = 3;
+		}
+		else
+			return false;
+	}
+	if (InValue == 5)
+	{
+		if (rand == 0 && bCan_YBR == true)
+		{
+			OutValue1 = 1;
+			OutValue2 = 2;
+		}
+		else if (rand == 1 && bCan_YRG == true)
+		{
+			OutValue1 = 2;
+			OutValue2 = 3;
+		}
+		else if (rand == 2 && bCan_YGO == true)
+		{
+			OutValue1 = 3;
+			OutValue2 = 4;
+		}
+		else if (rand == 3 && bCan_YOB == true)
+		{
+			OutValue1 = 4;
+			OutValue2 = 1;
+		}
+		else
+			return false;
+	}
+	return true;
+}
 
+void AC_Cubic::MakeTrue(int32 InValue1, int32 InValue2)
+{
+	if (InValue1 == 0)
+	{
+		if (InValue2 == 1)		bCan_WB = false;
+		if (InValue2 == 2)		bCan_WR = false;
+		if (InValue2 == 3)		bCan_WG = false;
+		if (InValue2 == 4)		bCan_WO = false;
+	}
+	if (InValue1 == 1)
+	{
+		if (InValue2 == 0)		bCan_WB = false;
+		if (InValue2 == 2)		bCan_BR = false;
+		if (InValue2 == 4)		bCan_OB = false;
+		if (InValue2 == 5)		bCan_YB = false;
 
 	}
+	if (InValue1 == 2)
+	{
+		if (InValue2 == 0)		bCan_WR = false;
+		if (InValue2 == 1)		bCan_BR = false;
+		if (InValue2 == 3)		bCan_RG = false;
+		if (InValue2 == 5)		bCan_YR = false;
+	}
+	if (InValue1 == 3)
+	{
+		if (InValue2 == 0)		bCan_WG = false;
+		if (InValue2 == 2)		bCan_RG = false;
+		if (InValue2 == 4)		bCan_GO = false;
+		if (InValue2 == 5)		bCan_YG = false;
+	}
+	if (InValue1 == 4)
+	{
+		if (InValue2 == 0)		bCan_WO = false;
+		if (InValue2 == 1)		bCan_OB = false;
+		if (InValue2 == 3)		bCan_GO = false;
+		if (InValue2 == 5)		bCan_YO = false;
+	}
+	if (InValue1 == 5)
+	{
+		if (InValue2 == 1)		bCan_YB = false;
+		if (InValue2 == 2)		bCan_YR = false;
+		if (InValue2 == 3)		bCan_YG = false;
+		if (InValue2 == 4)		bCan_YO = false;
+	}
+}
+
+void AC_Cubic::MakeTrue(int32 InValue1, int32 InValue2, int32 InValue3)
+{
 
 }

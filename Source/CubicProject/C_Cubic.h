@@ -19,7 +19,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	int32 RandomColor(int32 InValue);
+	bool RandomColor(int32 InValue, int32 &OutValue);
+	bool RandomColor(int32 InValue, int32 &OutValue1, int32 &OutValue2);
+
+	void MakeTrue(int32 InValue1, int32 InValue2);
+	void MakeTrue(int32 InValue1, int32 InValue2, int32 InValue3);
 
 
 private:
@@ -48,26 +52,26 @@ private:
 	class UMaterial* Color[48];
 
 private:
-	bool bCan_WB;
-	bool bCan_WR;
-	bool bCan_WG;
-	bool bCan_WO;
-	bool bCan_YB;
-	bool bCan_YR;
-	bool bCan_YG;
-	bool bCan_YO;
-	bool bCan_BR;
-	bool bCan_RG;
-	bool bCan_GO;
-	bool bCan_OB;
-	bool bCan_WBR;
-	bool bCan_WRG;
-	bool bCan_WGO;
-	bool bCan_WOB;
-	bool bCan_YBR;
-	bool bCan_YRG;
-	bool bCan_YGO;
-	bool bCan_YOB;
+	bool bCan_WB = true;
+	bool bCan_WR = true;
+	bool bCan_WG = true;
+	bool bCan_WO = true;
+	bool bCan_YB = true;
+	bool bCan_YR = true;
+	bool bCan_YG = true;
+	bool bCan_YO = true;
+	bool bCan_BR = true;
+	bool bCan_RG = true;
+	bool bCan_GO = true;
+	bool bCan_OB = true;
+	bool bCan_WBR = true;
+	bool bCan_WRG = true;
+	bool bCan_WGO = true;
+	bool bCan_WOB = true;
+	bool bCan_YBR = true;
+	bool bCan_YRG = true;
+	bool bCan_YGO = true;
+	bool bCan_YOB = true;
 	
 
 
