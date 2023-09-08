@@ -16,9 +16,9 @@ AC_Cubic::AC_Cubic()
 
 	// Get Color Material Assets
 	C_Helpers::GetAsset(&MainColor[0], "/Game/Materials/MAT_White");
-	C_Helpers::GetAsset(&MainColor[1], "/Game/Materials/MAT_Red");
-	C_Helpers::GetAsset(&MainColor[2], "/Game/Materials/MAT_Green");
-	C_Helpers::GetAsset(&MainColor[3], "/Game/Materials/MAT_Blue");
+	C_Helpers::GetAsset(&MainColor[1], "/Game/Materials/MAT_Blue");
+	C_Helpers::GetAsset(&MainColor[2], "/Game/Materials/MAT_Red");
+	C_Helpers::GetAsset(&MainColor[3], "/Game/Materials/MAT_Green");
 	C_Helpers::GetAsset(&MainColor[4], "/Game/Materials/MAT_Orange");
 	C_Helpers::GetAsset(&MainColor[5], "/Game/Materials/MAT_Yellow");
 	C_Helpers::GetAsset(&MainColor[6], "/Game/Materials/MAT_Black");
@@ -34,7 +34,7 @@ AC_Cubic::AC_Cubic()
 		C_Helpers::CreateSceneComponent(this, &BlockMesh[i], name, RootSceneComponent);
 
 		BlockMesh[i]->SetStaticMesh(cubeMesh);
-		BlockMesh[i]->SetMaterial(0, Black);
+		BlockMesh[i]->SetMaterial(0, MainColor[6]);
 	}
 
 	// CreateSceneComponent (Plane)
@@ -58,7 +58,7 @@ AC_Cubic::AC_Cubic()
 			for (int32 k = 0; k < 3; k++)
 			{
 				int32 index = i * 9 + j * 3 + k;
-				BlockMesh[index]->SetRelativeLocation(FVector(135 * (i - 1), 135 * (k - 1), 135 * (1 - j)));
+				BlockMesh[index]->SetRelativeLocation(FVector(135 * (k - 1), 135 * (j - 1), 135 * (i - 1)));
 			}
 		}
 	}
@@ -170,53 +170,206 @@ void AC_Cubic::BeginPlay()
 	}
 #endif
 
+
+
+	// Set Color The Center
+	for (int32 i = 0; i < 6; i++)
+		Plane[9 * i + 4]->SetMaterial(0, MainColor[i]);
+
+	// Set Color Buttom Plane
 	for (int32 i = 0; i < 3; i++)
 	{
 		for (int32 j = 0; j < 3; j++)
 		{
 			int32 index = i * 3 + j;
 
-			if (index % 2 == 1 && !(i == 1 && j == 1)) // Odd Number (5 Excluded)
+			if (index % 2 == 1) // Even Number
+			{
+				int32 randomValue = UKismetMathLibrary::RandomIntegerInRange(0, 5);
+				int32 outValue;
+				Plane[index]->SetMaterial(0, MainColor[randomValue]);
+
+				while (true)
+				{
+					if (RandomColor(randomValue, outValue))
+					{
+						if (index == 1)		Plane[16]->SetMaterial(0, MainColor[outValue]);
+						if (index == 3)		Plane[43]->SetMaterial(0, MainColor[outValue]);
+						if (index == 5)		Plane[25]->SetMaterial(0, MainColor[outValue]);
+						if (index == 7)		Plane[34]->SetMaterial(0, MainColor[outValue]);
+
+						// randomValue != outValue
+						if (randomValue < outValue)		MakeTrue(randomValue, outValue);
+						else							MakeTrue(outValue, randomValue);
+						
+						break;
+					}
+					else	randomValue = UKismetMathLibrary::RandomIntegerInRange(0, 5);
+				}
+			}
+			else if (index % 2 == 0 && !(i == 1 && j == 1)) // Odd Number (5 Excluded)
 			{
 				int32 randomValue = UKismetMathLibrary::RandomIntegerInRange(0, 5);
 				int32 outValue1;
 				int32 outValue2;
 				Plane[index]->SetMaterial(0, MainColor[randomValue]);
-				if (RandomColor(randomValue, outValue1, outValue2))
+
+				while (true)
 				{
-					if (index == 1)
+					if (RandomColor(randomValue, outValue1, outValue2))
 					{
-						Plane[45]->SetMaterial(0, MainColor[outValue1]);
-						Plane[16]->SetMaterial(0, MainColor[outValue2]);
-						MakeTrue(randomValue, outValue1, outValue2);
+						if (index == 0)
+						{
+							Plane[44]->SetMaterial(0, MainColor[outValue1]);
+							Plane[15]->SetMaterial(0, MainColor[outValue2]);
+						}
+						if (index == 2)
+						{
+							Plane[17]->SetMaterial(0, MainColor[outValue1]);
+							Plane[24]->SetMaterial(0, MainColor[outValue2]);
+						}
+						if (index == 6)
+						{
+							Plane[35]->SetMaterial(0, MainColor[outValue1]);
+							Plane[42]->SetMaterial(0, MainColor[outValue2]);
+						}
+						if (index == 8)
+						{
+							Plane[26]->SetMaterial(0, MainColor[outValue1]);
+							Plane[33]->SetMaterial(0, MainColor[outValue2]);
+						}
+
+						// randomValue != outValue1 != outValue2
+						if (randomValue < outValue1 && randomValue < outValue2)
+						{
+							if (outValue1 < outValue2)		MakeTrue(randomValue, outValue1, outValue2);
+							else							MakeTrue(randomValue, outValue2, outValue1);
+						}
+						else if (outValue1 < randomValue && outValue1 < outValue2)
+						{
+							if (randomValue < outValue2)	MakeTrue(outValue1, randomValue, outValue2);
+							else							MakeTrue(outValue1, outValue2, randomValue);
+						}
+						else
+						{
+							if (randomValue < outValue1)	MakeTrue(outValue2, randomValue, outValue1);
+							else							MakeTrue(outValue2, outValue1, randomValue);
+						}
+						break;
 					}
-
+					else	randomValue = UKismetMathLibrary::RandomIntegerInRange(0, 5);
 				}
-
-
 			}
-			else // Even Number
+			
+		}
+	}
+	
+	// Set Color Top Plane
+	for (int32 i = 0; i < 3; i++)
+	{
+		for (int32 j = 0; j < 3; j++)
+		{
+			int32 index = 45 + i * 3 + j;
+
+			if (index % 2 == 0) // Even Number
 			{
 				int32 randomValue = UKismetMathLibrary::RandomIntegerInRange(0, 5);
 				int32 outValue;
 				Plane[index]->SetMaterial(0, MainColor[randomValue]);
-				if (RandomColor(randomValue, outValue))
+
+				while (true)
 				{
-					Plane[index / 2 * 9 + 8]->SetMaterial(0, MainColor[outValue]);
-					MakeTrue(randomValue, outValue);
+					if (RandomColor(randomValue, outValue))
+					{
+						if (index == 46)		Plane[28]->SetMaterial(0, MainColor[outValue]);
+						if (index == 48)		Plane[37]->SetMaterial(0, MainColor[outValue]);
+						if (index == 50)		Plane[19]->SetMaterial(0, MainColor[outValue]);
+						if (index == 52)		Plane[10]->SetMaterial(0, MainColor[outValue]);
+
+						// randomValue != outValue
+						if (randomValue < outValue)		MakeTrue(randomValue, outValue);
+						else							MakeTrue(outValue, randomValue);
+
+						break;
+					}
+					else	randomValue = UKismetMathLibrary::RandomIntegerInRange(0, 5);
+				}
+			}
+			else if (index % 2 == 1 && !(i == 1 && j == 1)) // Odd Number (5 Excluded)
+			{
+				int32 randomValue = UKismetMathLibrary::RandomIntegerInRange(0, 5);
+				int32 outValue1;
+				int32 outValue2;
+				Plane[index]->SetMaterial(0, MainColor[randomValue]);
+
+				while (true)
+				{
+					if (RandomColor(randomValue, outValue1, outValue2))
+					{
+						if (index == 45)
+						{
+							Plane[36]->SetMaterial(0, MainColor[outValue1]);
+							Plane[29]->SetMaterial(0, MainColor[outValue2]);
+						}
+						if (index == 47)
+						{
+							Plane[27]->SetMaterial(0, MainColor[outValue1]);
+							Plane[20]->SetMaterial(0, MainColor[outValue2]);
+						}
+						if (index == 51)
+						{
+							Plane[9]->SetMaterial(0, MainColor[outValue1]);
+							Plane[38]->SetMaterial(0, MainColor[outValue2]);
+						}
+						if (index == 53)
+						{
+							Plane[18]->SetMaterial(0, MainColor[outValue1]);
+							Plane[11]->SetMaterial(0, MainColor[outValue2]);
+						}
+
+						// randomValue != outValue1 != outValue2
+						if (randomValue < outValue1 && randomValue < outValue2)
+						{
+							if (outValue1 < outValue2)		MakeTrue(randomValue, outValue1, outValue2);
+							else							MakeTrue(randomValue, outValue2, outValue1);
+						}
+						else if (outValue1 < randomValue && outValue1 < outValue2)
+						{
+							if (randomValue < outValue2)	MakeTrue(outValue1, randomValue, outValue2);
+							else							MakeTrue(outValue1, outValue2, randomValue);
+						}
+						else
+						{
+							if (randomValue < outValue1)	MakeTrue(outValue2, randomValue, outValue1);
+							else							MakeTrue(outValue2, outValue1, randomValue);
+						}
+						break;
+					}
+					else	randomValue = UKismetMathLibrary::RandomIntegerInRange(0, 5);
 				}
 			}
 		}
 	}
 
+	// Set Color Midde Plane
+	for (int32 i = 0; i < 4; i++)
+	{
+		int32 index = 9 * i + 14;
 
+		int32 randomValue = UKismetMathLibrary::RandomIntegerInRange(0, 5);
+		int32 outValue;
 
-
-
-
-
-
-
+		Plane[index]->SetMaterial(0, MainColor[randomValue]);
+		while (true)
+		{
+			if (RandomColor(randomValue, outValue))
+			{
+				if (index == 41)	Plane[12]->SetMaterial(0, MainColor[outValue]);
+				else				Plane[index + 7]->SetMaterial(0, MainColor[outValue]);
+				break;
+			}
+		}
+	}
 }
 
 void AC_Cubic::Tick(float DeltaTime)
@@ -227,6 +380,7 @@ void AC_Cubic::Tick(float DeltaTime)
 bool AC_Cubic::RandomColor(int32 InValue, int32& OutValue)
 {
 	int32 rand = UKismetMathLibrary::RandomIntegerInRange(0, 3);
+
 	if (InValue == 0)
 		{
 			if (rand == 0 && bCan_WB == true)			OutValue = 1;
@@ -439,50 +593,45 @@ void AC_Cubic::MakeTrue(int32 InValue1, int32 InValue2)
 {
 	if (InValue1 == 0)
 	{
-		if (InValue2 == 1)		bCan_WB = false;
-		if (InValue2 == 2)		bCan_WR = false;
-		if (InValue2 == 3)		bCan_WG = false;
-		if (InValue2 == 4)		bCan_WO = false;
+		if (InValue2 == 1)						bCan_WB = false;
+		if (InValue2 == 2)						bCan_WR = false;
+		if (InValue2 == 3)						bCan_WG = false;
+		if (InValue2 == 4)						bCan_WO = false;
 	}
 	if (InValue1 == 1)
 	{
-		if (InValue2 == 0)		bCan_WB = false;
-		if (InValue2 == 2)		bCan_BR = false;
-		if (InValue2 == 4)		bCan_OB = false;
-		if (InValue2 == 5)		bCan_YB = false;
+		if (InValue2 == 2)						bCan_BR = false;
+		if (InValue2 == 4)						bCan_OB = false;
+		if (InValue2 == 5)						bCan_YB = false;
 
 	}
 	if (InValue1 == 2)
 	{
-		if (InValue2 == 0)		bCan_WR = false;
-		if (InValue2 == 1)		bCan_BR = false;
-		if (InValue2 == 3)		bCan_RG = false;
-		if (InValue2 == 5)		bCan_YR = false;
+		if (InValue2 == 3)						bCan_RG = false;
+		if (InValue2 == 5)						bCan_YR = false;
 	}
 	if (InValue1 == 3)
 	{
-		if (InValue2 == 0)		bCan_WG = false;
-		if (InValue2 == 2)		bCan_RG = false;
-		if (InValue2 == 4)		bCan_GO = false;
-		if (InValue2 == 5)		bCan_YG = false;
+		if (InValue2 == 4)						bCan_GO = false;
+		if (InValue2 == 5)						bCan_YG = false;
 	}
-	if (InValue1 == 4)
-	{
-		if (InValue2 == 0)		bCan_WO = false;
-		if (InValue2 == 1)		bCan_OB = false;
-		if (InValue2 == 3)		bCan_GO = false;
-		if (InValue2 == 5)		bCan_YO = false;
-	}
-	if (InValue1 == 5)
-	{
-		if (InValue2 == 1)		bCan_YB = false;
-		if (InValue2 == 2)		bCan_YR = false;
-		if (InValue2 == 3)		bCan_YG = false;
-		if (InValue2 == 4)		bCan_YO = false;
-	}
+	if (InValue1 == 4 && InValue2 == 5)			bCan_YO = false;
 }
 
 void AC_Cubic::MakeTrue(int32 InValue1, int32 InValue2, int32 InValue3)
 {
-
+	if (InValue1 == 0)
+	{
+		if (InValue2 == 1 && InValue3 == 2)		bCan_WBR = false;
+		if (InValue2 == 1 && InValue3 == 4)		bCan_WOB = false;
+		if (InValue2 == 2 && InValue3 == 3)		bCan_WRG = false;
+		if (InValue2 == 3 && InValue3 == 4)		bCan_WGO = false;
+	}
+	if (InValue1 == 1)
+	{
+		if (InValue2 == 2 && InValue3 == 5)		bCan_YBR = false;
+		if (InValue1 == 4 && InValue3 == 5)		bCan_YOB = false;
+	}
+	if (InValue1 == 2)							bCan_YRG = false;
+	if (InValue1 == 3)							bCan_YGO = false;
 }
